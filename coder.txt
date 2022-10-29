@@ -1,0 +1,43 @@
+gun_violence['tavg'] = .0
+gun_violence['tmin'] = .0
+gun_violence['tmax'] = .0
+gun_violence['prcp'] = .0
+gun_violence['snow'] = .0
+gun_violence['wdir'] = .0
+gun_violence['wspd'] = .0
+gun_violence['wpgt'] = .0
+gun_violence['pres'] = .0
+gun_violence['tsun'] = .0
+
+--
+
+gun_violence_100 = gun_violence.head(100)
+
+--
+
+for index, row in gun_violence_100.iterrows():
+    #time period
+    start = datetime(gun_violence.at[index,'year'], gun_violence.at[index,'month'], gun_violence.at[index,'day'])
+    end = datetime(gun_violence.at[index,'year'], gun_violence.at[index,'month'], gun_violence.at[index,'day'])
+    
+    #location point
+    location = Point(gun_violence.at[index,'latitude'],gun_violence.at[index,'longitude'])
+
+    # Get daily data 
+    data = Daily(location, start, end)
+    data = data.fetch()
+  
+    gun_violence.at[index,'tavg'] = data.tavg.get(0)
+    gun_violence.at[index,'tmin'] = data.tmin.get(0)
+    gun_violence.at[index,'tmax'] = data.tmax.get(0)
+    gun_violence.at[index,'prcp'] = data.prcp.get(0)
+    gun_violence.at[index,'snow'] = data.snow.get(0)
+    gun_violence.at[index,'wdir'] = data.wdir.get(0)
+    gun_violence.at[index,'wspd'] = data.wspd.get(0)
+    gun_violence.at[index,'wpgt'] = data.wpgt.get(0)
+    gun_violence.at[index,'pres'] = data.pres.get(0)
+    gun_violence.at[index,'tsun'] = data.tsun.get(0)
+
+--
+
+    gun_violence.to_csv('gun_violence_w.csv', header=False, index=False)
